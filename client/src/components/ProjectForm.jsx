@@ -42,8 +42,6 @@ function ProjectForm({ onStart }) {
           className="w-full p-2 border rounded"
         >
           <option value="">Select a type</option>
-          <option value="bespoke-course">Bespoke Course</option>
-          <option value="bespoke-video">Bespoke Video</option>
           <option value="webinar">Webinar</option>
           </select>
       </div>
