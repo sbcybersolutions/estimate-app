@@ -2,13 +2,20 @@ import { useState } from 'react';
 import ProjectForm from '../components/ProjectForm';
 import QuoteTable from '../components/QuoteTable';
 import resourceData from '../data/resources';
+import { exportQuoteToExcel } from '../services/exportToExcel';
 
 function NewQuote() {
   const [projectInfo, setProjectInfo] = useState(null);
   const [total, setTotal] = useState(0);
+  const [rows, setRows] = useState([]);
 
   const handleStart = (info) => {
     setProjectInfo(info);
+    setRows([]); // reset if user goes back and starts over
+  };
+
+  const handleExport = () => {
+    exportQuoteToExcel({ projectInfo, rows, total });
   };
 
   const resources = projectInfo
@@ -27,10 +34,22 @@ function NewQuote() {
             <p className="text-lg">Quote for <strong>{projectInfo.client}</strong> – <em>{projectInfo.project}</em></p>
           </div>
 
-          <QuoteTable resources={resources} onTotalsChange={setTotal} />
+          <QuoteTable
+            resources={resources}
+            onTotalsChange={setTotal}
+            onRowsChange={setRows}
+          />
 
-          <div className="mt-6 text-right text-xl font-bold">
-            Total: ${total.toFixed(2)}
+          <div className="mt-6 flex justify-between items-center">
+            <div className="text-xl font-bold">
+              Total: ${total.toFixed(2)}
+            </div>
+            <button
+              onClick={handleExport}
+              className="bg-accent text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Export to Excel
+            </button>
           </div>
         </>
       )}
@@ -39,5 +58,5 @@ function NewQuote() {
 }
 
 export default NewQuote;
-// This component handles the new quote creation process, including project details and resource management.
-// It uses the ProjectForm for input and QuoteTable to display resources and calculate totals.
+// This component handles the new quote creation process.
+// It includes the project form, quote table, and export functionality.

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 
-function QuoteTable({ resources, onTotalsChange }) {
+function QuoteTable({ resources, onTotalsChange, onRowsChange }) {
   const [rows, setRows] = useState(
     resources.map(r => ({ ...r, hours: 0 }))
   );
 
   useEffect(() => {
+    // Calculate and pass back total
     const total = rows.reduce((acc, row) => {
       const hard = row.hours * row.rate;
       const billRate = row.rate / 0.5;
@@ -13,7 +14,12 @@ function QuoteTable({ resources, onTotalsChange }) {
       return acc + billPrice;
     }, 0);
     onTotalsChange(total);
-  }, [rows, onTotalsChange]);
+
+    // Also notify parent of updated rows
+    if (onRowsChange) {
+      onRowsChange(rows);
+    }
+  }, [rows, onTotalsChange, onRowsChange]);
 
   const handleHoursChange = (index, value) => {
     const updated = [...rows];
